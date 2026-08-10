@@ -15,7 +15,10 @@ services:
     runtime: node
     plan: free
     buildCommand: npm install && npm run build:css
-    preDeployCommand: npx prisma migrate deploy
+    # Runs migrations, but only when DATABASE_URL is actually configured.
+    # (Skips cleanly while the placeholder password is still set, so the
+    # first deploy never fails just because the DB isn't wired yet.)
+    preDeployCommand: sh -c 'if [ -z "$DATABASE_URL" ] || printf %s "$DATABASE_URL" | grep -q YOUR_DB_PASSWORD; then echo "DATABASE_URL not configured - skipping migrations"; else npx prisma migrate deploy; fi'
     startCommand: node server.js
     autoDeploy: true
     # Health checks are a paid-plan feature. Uncomment on a paid plan:

@@ -33,7 +33,7 @@ Open `http://localhost:3000`, enter a username and create or join a room (minimu
 
    (Replace `YOUR_DB_PASSWORD` in `render.yaml` before the first deploy, or paste the real value in the dashboard. Render's internal hostname `dpg-xxxx-a` is only reachable from inside Render.)
 
-The blueprint runs `npx prisma migrate deploy` before boot, so the Postgres schema is created automatically. The game still runs fully in-memory if `DATABASE_URL` is missing.
+The blueprint runs `npx prisma migrate deploy` before boot (it skips automatically while the placeholder password is set), so the Postgres schema is created automatically. The game still runs fully in-memory if `DATABASE_URL` is missing.
 
 > Free-tier note: Render free web services sleep after ~15 minutes of inactivity; the first request after wake-up can take ~30–50 seconds. Upgrade to a paid plan to avoid this.
 
