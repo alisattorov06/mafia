@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    command: sh -c "npx prisma migrate deploy && node server.js"
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      # Leave DATABASE_URL unset for in-memory mode, or point it at the db service below.
+      DATABASE_URL: postgresql://mafia:mafia@db:5432/mafia
+      CORS_ORIGIN: http://localhost:3000
+      SESSION_SECRET: change-me-to-a-long-random-string
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mafia
+      POSTGRES_PASSWORD: mafia
+      POSTGRES_DB: mafia
+    volumes:
+      - mafia_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mafia -d mafia"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mafia_pg:

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MAFIA — In the Room</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Jost:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/tailwind.css" />
+  </head>
+  <body>
+    <div class="night-veil" id="night-veil"></div>
+
+    <div class="min-h-screen flex flex-col lg:flex-row">
+      <!-- ============ MAIN COLUMN ============ -->
+      <div class="flex-1 flex flex-col min-w-0">
+        <header class="px-5 md:px-8 pt-6 pb-4">
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-baseline gap-4">
+              <h1 class="font-display text-xl tracking-[.18em] text-cream">MAFIA</h1>
+              <span id="room-code" class="font-mono text-brass text-sm tracking-[.3em]"></span>
+            </div>
+            <div id="phase-label" class="mono-tag text-cream"></div>
+          </div>
+          <div class="mt-4">
+            <div class="flex items-center justify-between mb-1">
+              <span id="timer-note" class="font-mono text-[11px] text-dim"></span>
+              <span id="round-label" class="font-mono text-[11px] text-dim"></span>
+            </div>
+            <div class="timer-rail"><div id="timer-fill" class="timer-fill" style="width:0%"></div></div>
+          </div>
+        </header>
+
+        <main id="stage" class="flex-1 px-5 md:px-8 pb-8 pt-2 min-w-0"></main>
+      </div>
+
+      <!-- ============ CHAT COLUMN ============ -->
+      <aside class="lg:w-80 lg:border-l lg:border-brass/15 flex flex-col lg:min-h-screen">
+        <div class="px-5 pt-5 lg:pt-6 pb-3 flex items-center justify-between">
+          <span class="mono-tag">Wiretaps</span>
+          <button id="chat-close" class="lg:hidden mono-tag text-blood">✕</button>
+        </div>
+        <div id="chat-tabs" class="px-5 flex gap-1 flex-wrap"></div>
+        <div id="chat-log" class="chat-scroll flex-1 px-5 py-4 space-y-3 text-sm min-h-0 lg:max-h-[55vh] lg:overflow-y-auto"></div>
+        <form id="chat-form" class="p-5 flex gap-2">
+          <input id="chat-input" class="field flex-1 text-sm" maxlength="200" placeholder="Say something…" autocomplete="off" />
+          <button class="btn" type="submit">Send</button>
+        </form>
+      </aside>
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/assets/js/game.js"></script>
+  </body>
+</html>

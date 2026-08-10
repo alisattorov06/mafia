@@ -1,0 +1,37 @@
+# Render Blueprint — deploy MAFIA as a single web service.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# How to deploy:
+#   1. Push this repo to GitHub.
+#   2. In Render Dashboard: New > Blueprint > select the repo.
+#   3. Set the DATABASE_URL env var (see below) and hit "Apply".
+#
+# NOTE: Render's internal Postgres hostnames (dpg-xxxx-a) are only reachable
+# from inside Render's network — the app connects fine on Render itself.
+
+services:
+  - type: web
+    name: mafia
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build:css
+    preDeployCommand: npx prisma migrate deploy
+    startCommand: node server.js
+    autoDeploy: true
+    # Health checks are a paid-plan feature. Uncomment on a paid plan:
+    # healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: TRUST_PROXY
+        value: "true"
+      # Replace YOUR_DB_PASSWORD below with the real password in the Render
+      # Dashboard (Service > Environment) after the first deploy.
+      # sync: false keeps your value across future deploys.
+      - key: DATABASE_URL
+        value: postgresql://alisattorov:YOUR_DB_PASSWORD@dpg-d9ssgjqjobas7380ivbg-a:5432/mafia_d5he
+        sync: false

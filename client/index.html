@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MAFIA — A Game of Lies</title>
+    <meta name="description" content="MAFIA — the real-time social deduction game of whispers, lies and cold betrayal. Play with friends." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Jost:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/tailwind.css" />
+  </head>
+  <body>
+    <div class="smoke" style="width:420px;height:420px;background:#d6a14b;top:-120px;left:-90px"></div>
+    <div class="smoke" style="width:320px;height:320px;background:#c13a2e;top:30%;right:-120px;animation-delay:-6s"></div>
+    <div class="smoke" style="width:380px;height:380px;background:#0e7490;bottom:-160px;left:20%;animation-delay:-11s"></div>
+
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-16">
+      <header class="text-center fade-up" style="animation-delay:.05s">
+        <div class="mono-tag mb-6">Est. MMXXVI · Los Noches</div>
+        <h1 class="font-display leading-none text-cream select-none" style="font-size:clamp(4.2rem,15vw,9rem);letter-spacing:.06em">
+          <span class="masthead-letter">M</span><span class="masthead-letter" style="animation-delay:.06s">A</span><span class="masthead-letter" style="animation-delay:.12s">F</span><span class="masthead-letter" style="animation-delay:.18s">I</span><span class="masthead-letter" style="animation-delay:.24s">A</span>
+        </h1>
+        <div class="ornament max-w-md mx-auto mt-8" style="animation-delay:.3s;opacity:0;animation:fadeUp .6s ease forwards .3s">
+          <span class="gem"></span>
+        </div>
+        <p class="font-serif-italic text-brass text-xl md:text-2xl mt-6" style="opacity:0;animation:fadeUp .6s ease forwards .42s">
+          In this town, the night keeps its secrets.
+        </p>
+      </header>
+
+      <section class="w-full max-w-md mt-14 space-y-6" style="opacity:0;animation:fadeUp .6s ease forwards .55s">
+        <div class="panel panel-corner p-8 space-y-5">
+          <label class="block">
+            <span class="mono-tag block mb-2">Your alias</span>
+            <input id="name" class="field w-full" maxlength="20" placeholder="Enter a name…" autocomplete="off" />
+          </label>
+
+          <button id="btn-create" class="btn btn-primary w-full">Open a room</button>
+
+          <div class="hairline-top pt-5 flex items-center gap-3">
+            <input
+              id="join-code"
+              class="field flex-1 font-mono uppercase tracking-[.3em] text-center"
+              maxlength="6"
+              placeholder="ROOM CODE"
+              autocomplete="off"
+            />
+            <button id="btn-join" class="btn">Join</button>
+          </div>
+        </div>
+
+        <p class="text-center text-dim text-sm leading-relaxed px-4">
+          Gather 6–20 friends, split into hidden teams, and argue your way to victory —
+          or let the night swallow you.
+        </p>
+      </section>
+
+      <footer class="mono-tag mt-16 opacity-60 text-center text-sm">
+        6–20 players · server-authoritative · zero knowledge leaks
+      </footer>
+    </main>
+
+    <div id="toast"></div>
+
+    <script type="module" src="/assets/js/index.js"></script>
+  </body>
+</html>

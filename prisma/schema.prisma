@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  createdAt    DateTime @default(now())
+  games        GamePlayer[]
+  results      GameResult[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String?
+  username  String
+  createdAt DateTime @default(now())
+  lastSeen  DateTime @updatedAt
+}
+
+model Game {
+  id           String        @id @default(cuid())
+  roomCode     String        @unique
+  mode         String
+  status       String        @default("ENDED")
+  winner       String?
+  phase        String?
+  rounds       Int           @default(0)
+  hostId       String?
+  createdAt    DateTime      @default(now())
+  startedAt    DateTime?
+  endedAt      DateTime?
+  settings     Json?
+  players      GamePlayer[]
+  events       GameEvent[]
+  result       GameResult?
+}
+
+model GamePlayer {
+  id               String   @id @default(cuid())
+  gameId           String
+  game             Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  sessionId        String?
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id])
+  displayName      String
+  role             String?
+  team             String?
+  alive            Boolean  @default(true)
+  isHost           Boolean  @default(false)
+  joinedAt         DateTime @default(now())
+  eliminatedAt     DateTime?
+  eliminationReason String?
+  result           String?
+}
+
+model GameEvent {
+  id        String   @id @default(cuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  type      String
+  actorId   String?
+  targetId  String?
+  round     Int?
+  phase     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model GameResult {
+  id        String   @id @default(cuid())
+  gameId    String   @unique
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  winner    String
+  playerId  String?
+  player    User?    @relation(fields: [playerId], references: [id])
+  durationSec Int    @default(0)
+  rounds    Int      @default(0)
+  stats     Json?
+  createdAt DateTime @default(now())
+}

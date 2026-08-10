@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log*
+.env
+.git/
+client/assets/css/tailwind.css
+Dockerfile
+docker-compose.yml
+README.md
