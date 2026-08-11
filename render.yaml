@@ -4,10 +4,13 @@
 # How to deploy:
 #   1. Push this repo to GitHub.
 #   2. In Render Dashboard: New > Blueprint > select the repo.
-#   3. Set the DATABASE_URL env var (see below) and hit "Apply".
+#   3. Apply.
+#   4. Open Service > Environment and set DATABASE_URL (see below), then deploy.
 #
 # NOTE: Render's internal Postgres hostnames (dpg-xxxx-a) are only reachable
 # from inside Render's network — the app connects fine on Render itself.
+# Free tier notes: no pre-deploy commands and no health checks (both paid-only),
+# so migrations run on every boot via the start command instead (idempotent).
 
 services:
   - type: web
@@ -15,11 +18,7 @@ services:
     runtime: node
     plan: free
     buildCommand: npm install && npm run build:css
-    # Runs migrations, but only when DATABASE_URL is actually configured.
-    # (Skips cleanly while the placeholder password is still set, so the
-    # first deploy never fails just because the DB isn't wired yet.)
-    preDeployCommand: sh -c 'if [ -z "$DATABASE_URL" ] || printf %s "$DATABASE_URL" | grep -q YOUR_DB_PASSWORD; then echo "DATABASE_URL not configured - skipping migrations"; else npx prisma migrate deploy; fi'
-    startCommand: node server.js
+    startCommand: sh -c 'if [ -z "$DATABASE_URL" ] || printf %s "$DATABASE_URL" | grep -q YOUR_DB_PASSWORD; then echo "DATABASE_URL not configured - skipping migrations"; else npx prisma migrate deploy; fi; exec node server.js'
     autoDeploy: true
     # Health checks are a paid-plan feature. Uncomment on a paid plan:
     # healthCheckPath: /healthz
@@ -32,9 +31,9 @@ services:
         generateValue: true
       - key: TRUST_PROXY
         value: "true"
-      # Replace YOUR_DB_PASSWORD below with the real password in the Render
-      # Dashboard (Service > Environment) after the first deploy.
-      # sync: false keeps your value across future deploys.
+      # Paste your real connection string in the Render dashboard
+      # (Service > Environment > DATABASE_URL) after the first deploy:
+      #   postgresql://USER:PASSWORD@dpg-d9ssgjqjobas7380ivbg-a:5432/mafia_d5he
+      # sync: false means blueprint re-syncs will never overwrite your value.
       - key: DATABASE_URL
-        value: postgresql://alisattorov:YOUR_DB_PASSWORD@dpg-d9ssgjqjobas7380ivbg-a:5432/mafia_d5he
         sync: false
