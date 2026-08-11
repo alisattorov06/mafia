@@ -6,6 +6,9 @@ const $ = (id) => document.getElementById(id);
 const nameInput = $('name');
 const codeInput = $('join-code');
 const roomsEl = $('open-rooms');
+const accessInput = $('room-access');
+const createPasswordInput = $('create-password');
+const joinPasswordInput = $('join-password');
 
 nameInput.value = localStorage.getItem('mafia.name') || '';
 nameInput.focus();
@@ -32,9 +35,16 @@ async function guardName() {
 $('btn-create').addEventListener('click', async () => {
   const name = await guardName();
   if (!name) return;
+  const isPrivate = accessInput.value === 'private';
+  const password = createPasswordInput.value;
+  if (isPrivate && !password.trim()) {
+    toast('Choose a password for the private room.', 'error');
+    createPasswordInput.focus();
+    return;
+  }
   $('btn-create').disabled = true;
   try {
-    const res = await api('/api/create', { name, mode: 'CLASSIC' });
+    const res = await api('/api/create', { name, mode: 'CLASSIC', password: isPrivate ? password : undefined });
     sessionStorage.setItem(TOKEN_KEY, res.token);
     toast(`Room ${res.roomCode} opened.`, 'success');
     redirectToGame(res.roomCode);
@@ -44,6 +54,16 @@ $('btn-create').addEventListener('click', async () => {
     $('btn-create').disabled = false;
   }
 });
+
+function syncRoomAccess() {
+  const isPrivate = accessInput.value === 'private';
+  $('create-password-wrap').classList.toggle('hidden', !isPrivate);
+  $('btn-create').textContent = isPrivate ? 'Open a private room' : 'Open a public room';
+  if (!isPrivate) createPasswordInput.value = '';
+}
+
+accessInput.addEventListener('change', syncRoomAccess);
+syncRoomAccess();
 
 $('btn-join').addEventListener('click', async () => {
   const name = await guardName();
@@ -55,7 +75,7 @@ $('btn-join').addEventListener('click', async () => {
   }
   $('btn-join').disabled = true;
   try {
-    const res = await api('/api/join', { code, name });
+    const res = await api('/api/join', { code, name, password: joinPasswordInput.value });
     sessionStorage.setItem(TOKEN_KEY, res.token);
     toast('Entering the room…', 'success');
     redirectToGame(code);
@@ -135,6 +155,9 @@ async function loadPublicRooms() {
 $('btn-refresh-rooms').addEventListener('click', loadPublicRooms);
 
 codeInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') $('btn-join').click();
+});
+joinPasswordInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') $('btn-join').click();
 });
 nameInput.addEventListener('keydown', (e) => {

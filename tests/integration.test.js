@@ -135,6 +135,19 @@ describe('end-to-end over real sockets', () => {
     const publicRoom = listed.rooms.find((room) => room.code === first.roomCode);
     assert.deepEqual(Object.keys(publicRoom).sort(), ['code', 'createdAt', 'maxPlayers', 'minPlayers', 'mode', 'playerCount']);
 
+    const rejected = await fetch(`${base}/api/join`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: privateRoom.roomCode, name: 'NoPassword' })
+    }).then((res) => res.json());
+    assert.equal(rejected.code, 'WRONG_PASSWORD');
+    const admitted = await fetch(`${base}/api/join`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: privateRoom.roomCode, name: 'Guest', password: 'secret' })
+    }).then((res) => res.json());
+    assert.equal(admitted.ok, true);
+
     const room = manager.rooms.get(first.roomCode);
     room.phase = PHASES.DISCUSSION;
     listed = await fetch(`${base}/api/rooms`).then((res) => res.json());

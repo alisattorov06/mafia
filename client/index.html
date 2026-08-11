@@ -108,17 +108,33 @@
             <input id="name" class="field w-full" maxlength="20" placeholder="Enter a name…" autocomplete="off" />
           </label>
 
+          <label class="block">
+            <span class="mono-tag block mb-2">Room access</span>
+            <select id="room-access" class="field w-full">
+              <option value="public">Public — listed for everyone</option>
+              <option value="private">Private — password required</option>
+            </select>
+          </label>
+
+          <label id="create-password-wrap" class="block hidden">
+            <span class="mono-tag block mb-2">Room password</span>
+            <input id="create-password" class="field w-full" type="password" maxlength="64" placeholder="Choose a password…" autocomplete="new-password" />
+          </label>
+
           <button id="btn-create" class="btn btn-primary w-full">Open a public room</button>
 
-          <div class="hairline-top pt-5 flex items-center gap-3">
-            <input
-              id="join-code"
-              class="field flex-1 font-mono uppercase tracking-[.3em] text-center"
-              maxlength="6"
-              placeholder="ROOM CODE"
-              autocomplete="off"
-            />
-            <button id="btn-join" class="btn">Join</button>
+          <div class="hairline-top pt-5 space-y-3">
+            <div class="flex items-center gap-3">
+              <input
+                id="join-code"
+                class="field flex-1 font-mono uppercase tracking-[.3em] text-center"
+                maxlength="6"
+                placeholder="ROOM CODE"
+                autocomplete="off"
+              />
+              <button id="btn-join" class="btn">Join</button>
+            </div>
+            <input id="join-password" class="field w-full" type="password" maxlength="64" placeholder="Password (only for private rooms)" autocomplete="current-password" />
           </div>
         </div>
 
