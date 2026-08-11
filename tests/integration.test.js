@@ -116,6 +116,31 @@ describe('end-to-end over real sockets', () => {
     return { roomCode: created.roomCode, agents };
   }
 
+  test('public room browser lists only joinable password-free lobbies', async () => {
+    const first = await fetch(`${base}/api/create`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'PublicHost', mode: 'CLASSIC' })
+    }).then((res) => res.json());
+    const privateRoom = await fetch(`${base}/api/create`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'PrivateHost', mode: 'CLASSIC', password: 'secret' })
+    }).then((res) => res.json());
+
+    let listed = await fetch(`${base}/api/rooms`).then((res) => res.json());
+    assert.equal(listed.ok, true);
+    assert.ok(listed.rooms.some((room) => room.code === first.roomCode));
+    assert.ok(!listed.rooms.some((room) => room.code === privateRoom.roomCode));
+    const publicRoom = listed.rooms.find((room) => room.code === first.roomCode);
+    assert.deepEqual(Object.keys(publicRoom).sort(), ['code', 'createdAt', 'maxPlayers', 'minPlayers', 'mode', 'playerCount']);
+
+    const room = manager.rooms.get(first.roomCode);
+    room.phase = PHASES.DISCUSSION;
+    listed = await fetch(`${base}/api/rooms`).then((res) => res.json());
+    assert.ok(!listed.rooms.some((entry) => entry.code === first.roomCode));
+  });
+
   test('full 8-player game over real sockets: save, detective, voting, town win, chat secrecy', async () => {
     const { roomCode, agents } = await createRoomWithPlayers(8);
     const room = manager.rooms.get(roomCode);

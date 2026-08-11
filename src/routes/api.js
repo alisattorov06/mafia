@@ -69,6 +69,14 @@ export function apiRouter(manager) {
     }
   });
 
+  router.get('/rooms', (_req, res, next) => {
+    try {
+      res.json({ ok: true, rooms: manager.listPublicRooms() });
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.post('/leave', (req, res, next) => {
     try {
       const { token } = req.body || {};

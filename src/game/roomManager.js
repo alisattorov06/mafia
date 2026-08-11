@@ -119,6 +119,29 @@ export class RoomManager {
     return { room, player, session };
   }
 
+  /**
+   * Safe, public lobby metadata for the room browser.  Deliberately omit
+   * player identities and any private room data from this unauthenticated view.
+   */
+  listPublicRooms() {
+    return [...this.rooms.values()]
+      .filter((room) => (
+        room.phase === PHASES.LOBBY
+        && !room.password
+        && room.players.size < room.settings.maxPlayers
+      ))
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 50)
+      .map((room) => ({
+        code: room.code,
+        mode: room.mode,
+        playerCount: room.players.size,
+        maxPlayers: room.settings.maxPlayers,
+        minPlayers: room.settings.minPlayers,
+        createdAt: room.createdAt
+      }));
+  }
+
   joinRoom(codeRaw, { name, password, token }) {
     const code = String(codeRaw || '').toUpperCase().trim();
     const room = this.rooms.get(code);

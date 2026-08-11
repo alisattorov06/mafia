@@ -108,7 +108,7 @@
             <input id="name" class="field w-full" maxlength="20" placeholder="Enter a name…" autocomplete="off" />
           </label>
 
-          <button id="btn-create" class="btn btn-primary w-full">Open a room</button>
+          <button id="btn-create" class="btn btn-primary w-full">Open a public room</button>
 
           <div class="hairline-top pt-5 flex items-center gap-3">
             <input
@@ -121,6 +121,19 @@
             <button id="btn-join" class="btn">Join</button>
           </div>
         </div>
+
+        <section class="panel panel-corner p-6" aria-labelledby="open-rooms-title">
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <div>
+              <span class="mono-tag block mb-1">Join a game</span>
+              <h2 id="open-rooms-title" class="font-display text-lg tracking-[.04em] text-cream">Open rooms</h2>
+            </div>
+            <button id="btn-refresh-rooms" class="btn text-xs px-3 py-2" type="button">Refresh</button>
+          </div>
+          <div id="open-rooms" class="space-y-2" aria-live="polite">
+            <p class="text-dim text-sm py-3 text-center">Looking for open rooms…</p>
+          </div>
+        </section>
 
         <p class="text-center text-dim text-sm leading-relaxed px-4">
           Gather 6–20 friends, split into hidden teams, and argue your way to victory —

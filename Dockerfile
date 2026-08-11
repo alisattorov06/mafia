@@ -12,7 +12,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY tailwind.config.js postcss.config.js ./
-COPY client/assets/css/input.css ./client/assets/css/input.css
+COPY client ./client
 RUN npm run build:css
 
 # ---- runtime stage ----
