@@ -34,6 +34,8 @@ services:
         generateValue: true
       - key: TRUST_PROXY
         value: "true"
+      - key: CORS_ORIGIN
+        value: "https://mafia.quizlab.uz"
       # Paste your real connection string in the Render dashboard
       # (Service > Environment > DATABASE_URL) after the first deploy:
       #   postgresql://USER:PASSWORD@dpg-d9ssgjqjobas7380ivbg-a:5432/mafia_d5he

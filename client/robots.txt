@@ -5,5 +5,5 @@ Disallow: /socket.io/
 Disallow: /game.html
 
 # MAFIA — real-time social deduction game.
-# Find it at: https://mafia.onrender.com
-Sitemap: https://mafia.onrender.com/sitemap.xml
+# Find it at: https://mafia.quizlab.uz
+Sitemap: https://mafia.quizlab.uz/sitemap.xml
